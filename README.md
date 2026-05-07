@@ -39,6 +39,11 @@ la méthode `move()` de la classe Robot. La méthode `overlays()` ajoutée à `C
 directions avant chaque déplacement, ce qui suffit à contourner les obstacles dans des
 configurations simples mais ne garantit pas le chemin optimal...
 
+Limites connues : l'évitement local ne garantit pas le chemin optimal et peut 
+laisser un robot bloqué si aucune direction immédiate n'est libre. Une 
+implémentation Dijkstra complète aurait été préférable pour gérer ces cas, 
+mais elle dépassait le périmètre de ce que j'ai pu réaliser dans le temps imparti.
+
 ## AI-Assisted Tool Usage
 
 | Team Member | Declaration |
