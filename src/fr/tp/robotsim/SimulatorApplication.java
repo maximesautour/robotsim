@@ -10,10 +10,17 @@ import fr.tp.robotsim.model.ProductionMachine;
 import fr.tp.robotsim.model.Robot;
 import fr.tp.robotsim.model.Room;
 import fr.tp.robotsim.model.WorkArea;
+import java.util.Arrays;
+import java.util.logging.Logger;
 
 public class SimulatorApplication {
+	
+	private static final Logger LOGGER = Logger.getLogger(SimulatorApplication.class.getName());
 
 	public static void main(String[] args) {
+		
+		LOGGER.info("Starting the robot simulator...");
+		LOGGER.config("With parameters '" + Arrays.toString(args) + "'.");
 
         // création de l'usine
 		Factory factory = new Factory(null, "factory", new Position(0, 0), new Dimension(200, 200));
