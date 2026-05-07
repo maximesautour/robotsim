@@ -39,56 +39,82 @@ public class Robot extends Component implements Serializable {
 	}
 
 	public void move(Component target) {
-		int currentX = getxCoordinate();
-		int currentY = getyCoordinate();
-		int targetX = target.getxCoordinate();
-		int targetY = target.getyCoordinate();
-		int step = (int) speed; // pour convertir double speed en un int comme les getPosition() sont des int
+	    final int currentX = getxCoordinate();
+	    final int currentY = getyCoordinate();
+	    final int targetX = target.getxCoordinate();
+	    final int targetY = target.getyCoordinate();
+	    final int step = (int) speed;
 
-		int newX = currentX;
-		int newY = currentY;
+	    int newX = currentX;
+	    int newY = currentY;
 
-		// pour x
+	    // Direction préférée vers la cible
+	    int dx = 0;
+	    if (currentX < targetX) {
+	        dx = step;
+	    }
+	    else if (currentX > targetX) {
+	        dx = -step;
+	    }
 
-		if (currentX < targetX) {
-			newX = currentX + step;
-			if (newX >= targetX) {
-				newX = targetX;
-			}
-		}
+	    int dy = 0;
+	    if (currentY < targetY) {
+	        dy = step;
+	    }
+	    else if (currentY > targetY) {
+	        dy = -step;
+	    }
 
-		if (currentX > targetX) {
-			newX = currentX - step;
-			if (newX <= targetX) {
-				newX = targetX;
-			}
-		}
+	    // Essai 1 : déplacement direct (x et y)
+	    Position attempt1 = new Position(currentX + dx, currentY + dy);
+	    if (!isBlocked(attempt1)) {
+	        newX = currentX + dx;
+	        newY = currentY + dy;
+	    }
+	    // Essai 2 : déplacement seulement en x
+	    else if (dx != 0 && !isBlocked(new Position(currentX + dx, currentY))) {
+	        newX = currentX + dx;
+	    }
+	    // Essai 3 : déplacement seulement en y
+	    else if (dy != 0 && !isBlocked(new Position(currentX, currentY + dy))) {
+	        newY = currentY + dy;
+	    }
+	    // Essai 4 : contournement perpendiculaire (haut ou bas)
+	    else if (!isBlocked(new Position(currentX, currentY + step))) {
+	        newY = currentY + step;
+	    }
+	    else if (!isBlocked(new Position(currentX, currentY - step))) {
+	        newY = currentY - step;
+	    }
+	    // Si tout est bloqué, on ne bouge pas
 
-		// pour y
+	    // Pas dépasser la cible
+	    if (dx > 0 && newX > targetX) {
+	        newX = targetX;
+	    }
+	    else if (dx < 0 && newX < targetX) {
+	        newX = targetX;
+	    }
+	    if (dy > 0 && newY > targetY) {
+	        newY = targetY;
+	    }
+	    else if (dy < 0 && newY < targetY) {
+	        newY = targetY;
+	    }
 
-		if (currentY < targetY) {
-			newY = currentY + step;
-			if (newY >= targetY) {
-				newY = targetY;
-			}
-		}
+	    getPosition().setX(newX);
+	    getPosition().setY(newY);
 
-		if (currentY > targetY) {
-			newY = currentY - step;
-			if (newY <= targetY) {
-				newY = targetY;
-			}
-		}
+	    if (getFactory() != null) {
+	        getFactory().notifyObservers();
+	    }
+	}
 
-		getPosition().setX(newX);
-		getPosition().setY(newY);
-
-		// si currentX (ou currentY) == targetX (ou target Y) alors on laisse la valeur
-		// de newX et newY
-		
-		if (getFactory() != null) {
-		    getFactory().notifyObservers();
-		}
+	private boolean isBlocked(Position position) {
+	    if (getFactory() == null) {
+	        return false;
+	    }
+	    return getFactory().isObstacle(position);
 	}
 	
 	

@@ -22,4 +22,28 @@ public class Room extends CompositeComponent implements Serializable {
     public String toString() {
         return "[Room] " + super.toString();
     }
+    
+    @Override
+    public boolean overlays(Position position) {
+        final int x = position.getX();
+        final int y = position.getY();
+        final int roomX = getxCoordinate();
+        final int roomY = getyCoordinate();
+        final int width = getDimension().getWidth();
+        final int height = getDimension().getHeight();
+        final int wallThickness = 3;
+
+        // Position en dehors de la room → pas un mur
+        if (x < roomX || x > roomX + width || y < roomY || y > roomY + height) {
+            return false;
+        }
+
+        // Position sur l'un des 4 murs
+        boolean onLeftWall = x <= roomX + wallThickness;
+        boolean onRightWall = x >= roomX + width - wallThickness;
+        boolean onTopWall = y <= roomY + wallThickness;
+        boolean onBottomWall = y >= roomY + height - wallThickness;
+
+        return onLeftWall || onRightWall || onTopWall || onBottomWall;
+    }
 }

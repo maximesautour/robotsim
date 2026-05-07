@@ -65,4 +65,8 @@ public abstract class Component implements Figure, Serializable{
     public String toString() {
         return name + " at " + position + " of size " + dimension;
     }
+    
+    public boolean overlays(Position position) {
+        return false;
+    }
 }

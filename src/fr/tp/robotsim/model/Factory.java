@@ -129,4 +129,21 @@ public class Factory extends CompositeComponent implements Canvas, Observable, S
         return observers;
     }
     
+    public boolean isObstacle(Position position) {
+        return checkObstacleRecursive(this, position);
+    }
+
+    private boolean checkObstacleRecursive(CompositeComponent container, Position position) {
+        for (Component component : container.getComponents()) {
+            if (component.overlays(position)) {
+                return true;
+            }
+            if (component instanceof CompositeComponent) {
+                if (checkObstacleRecursive((CompositeComponent) component, position)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
